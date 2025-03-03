@@ -6,12 +6,22 @@ import bakery.repository.OrderRepository;
 
 import java.util.List;
 
+/**
+ * Этот класс используется для конвертации объектов Order в объекты OrderDto и наоборот
+ */
+
 public class OrderMapper implements Mapper<Order, OrderDto> {
     private final OrderRepository orderRepository;
 
     public OrderMapper(OrderRepository orderRepository) {
         this.orderRepository = orderRepository;
     }
+    /**
+     * Преобразует сущность Order в объект DTO OrderDto
+     *
+     * @param order сущность Order, которую нужно преобразовать
+     * @return объект OrderDto, представляющий сущность Order, или null, если входной параметр равен null
+     */
 
     @Override
     public OrderDto toDto(Order order) {
@@ -27,6 +37,12 @@ public class OrderMapper implements Mapper<Order, OrderDto> {
 
         return orderDto;
     }
+    /**
+     * Преобразует объект DTO OrderDto в сущность Order
+     *
+     * @param orderDto объект OrderDto, который нужно преобразовать
+     * @return сущность Order, представляющая объект OrderDto, или null, если входной параметр равен null
+     */
 
     @Override
     public Order toEntity(OrderDto orderDto) {

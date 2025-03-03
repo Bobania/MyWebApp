@@ -7,6 +7,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Репозиторий для управления сущностями Product в базе данных
+ */
 public class ProductRepository {
     private static final String SQL_INSERT_PRODUCT = "INSERT INTO products (title, price) VALUES (?, ?)";
     private static final String SQL_SELECT_PRODUCT_BY_ID = "SELECT * FROM products WHERE id = ?";
@@ -14,6 +17,11 @@ public class ProductRepository {
     private static final String SQL_UPDATE_PRODUCT = "UPDATE products SET title = ?, price = ? WHERE id = ?";
     private static final String SQL_DELETE_PRODUCT = "DELETE FROM products WHERE id = ?";
 
+    /**
+     * Сохраняет новую сущность Product в базе данных
+     *
+     * @param product сущность Product для сохранения
+     */
     public void save(Product product) {
         try (Connection connection = DatabaseUtil.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SQL_INSERT_PRODUCT, Statement.RETURN_GENERATED_KEYS)) {
@@ -29,6 +37,13 @@ public class ProductRepository {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Находит сущность Product по её id
+     *
+     * @param id, id сущности Product для поиска
+     * @return сущность Product с указанным id, или null, если не найдена
+     */
     public Product findById(Long id) {
         try (Connection connection = DatabaseUtil.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_PRODUCT_BY_ID)) {
@@ -48,6 +63,11 @@ public class ProductRepository {
         return null;
     }
 
+    /**
+     * Находит все сущности Product в базе данных
+     *
+     * @return список всех сущностей Product
+     */
     public List<Product> findAll() {
         List<Product> products = new ArrayList<>();
         try (Connection connection = DatabaseUtil.getConnection();
@@ -67,6 +87,11 @@ public class ProductRepository {
         return products;
     }
 
+    /**
+     * Обновляет существующую сущность Product в базе данных
+     *
+     * @param product сущность Product для обновления
+     */
     public void update(Product product) {
         try (Connection connection = DatabaseUtil.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SQL_UPDATE_PRODUCT)) {
@@ -80,6 +105,11 @@ public class ProductRepository {
         }
     }
 
+    /**
+     * Удаляет сущность Product из базы данных по id
+     *
+     * @param id id сущности Product для удаления
+     */
     public void delete(Long id) {
         try (Connection connection = DatabaseUtil.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SQL_DELETE_PRODUCT)) {

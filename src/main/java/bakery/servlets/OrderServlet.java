@@ -14,12 +14,19 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-
+/**
+ * Сервлет для управления заказами, обрабатывающий HTTP-запросы для создания, получения, обновления и удаления заказов
+ */
 @WebServlet("/orders/*")
 public class OrderServlet extends HttpServlet {
-    private OrderService orderService;
+    OrderService orderService;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    /**
+     * Инициализирует сервлет и создает экземпляр OrderService
+     *
+     * @throws ServletException если не удается инициализировать сервлет
+     */
     @Override
     public void init() throws ServletException {
         OrderRepository orderRepository = new OrderRepository();
@@ -27,6 +34,16 @@ public class OrderServlet extends HttpServlet {
         orderService = new OrderService(orderRepository, orderMapper);
     }
 
+    /**
+     * Обрабатывает GET-запросы для получения информации о заказах
+     * Если указан id заказа, возвращает информацию о конкретном заказе
+     * Если id не указан, возвращает список всех заказов
+     *
+     * @param request объект HttpServletRequest, содержащий информацию о запросе
+     * @param response объект HttpServletResponse, используемый для отправки ответа
+     * @throws ServletException если возникает ошибка при обработке запроса
+     * @throws IOException если возникает ошибка ввода-вывода
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String pathInfo = request.getPathInfo();
@@ -51,6 +68,14 @@ public class OrderServlet extends HttpServlet {
         }
     }
 
+    /**
+     * Обрабатывает POST-запросы для создания нового заказа
+     *
+     * @param request объект HttpServletRequest, содержащий информацию о запросе
+     * @param response объект HttpServletResponse, используемый для отправки ответа
+     * @throws ServletException если возникает ошибка при обработке запроса
+     * @throws IOException если возникает ошибка ввода-вывода
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         OrderDto orderDto = objectMapper.readValue(request.getInputStream(), OrderDto.class);
@@ -60,6 +85,14 @@ public class OrderServlet extends HttpServlet {
         response.getWriter().write(objectMapper.writeValueAsString(createdOrder));
     }
 
+    /**
+     * Обрабатывает PUT-запросы для обновления существующего заказа
+     *
+     * @param request объект HttpServletRequest, содержащий информацию о запросе
+     * @param response объект HttpServletResponse, используемый для отправки ответа
+     * @throws ServletException если возникает ошибка при обработке запроса
+     * @throws IOException если возникает ошибка ввода-вывода
+     */
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         OrderDto orderDto = objectMapper.readValue(request.getInputStream(), OrderDto.class);
@@ -67,6 +100,14 @@ public class OrderServlet extends HttpServlet {
         response.setStatus(HttpServletResponse.SC_OK);
     }
 
+    /**
+     * Обрабатывает DELETE-запросы для удаления заказа по его id
+     *
+     * @param request объект HttpServletRequest, содержащий информацию о запросе
+     * @param response объект HttpServletResponse, используемый для отправки ответа
+     * @throws ServletException если возникает ошибка при обработке запроса
+     * @throws IOException если возникает ошибка ввода-вывода
+     */
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String pathInfo = request.getPathInfo();

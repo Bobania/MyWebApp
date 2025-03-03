@@ -7,6 +7,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Репозиторий для управления сущностями Client в базе данных
+ */
 public class ClientRepository {
     private static final String SQL_INSERT_CLIENT = "INSERT INTO clients (name, surname, phone) VALUES (?, ?, ?)";
     private static final String SQL_SELECT_CLIENT_BY_ID = "SELECT * FROM clients WHERE id = ?";
@@ -14,6 +17,11 @@ public class ClientRepository {
     private static final String SQL_UPDATE_CLIENT = "UPDATE clients SET name = ?, surname = ?, phone = ? WHERE id = ?";
     private static final String SQL_DELETE_CLIENT = "DELETE FROM clients WHERE id = ?";
 
+    /**
+     * Сохраняет новую сущность Client в базе данных
+     *
+     * @param client сущность Client для сохранения
+     */
     public void save(Client client) {
         try (Connection connection = DatabaseUtil.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SQL_INSERT_CLIENT, Statement.RETURN_GENERATED_KEYS)) {
@@ -30,7 +38,12 @@ public class ClientRepository {
             e.printStackTrace();
         }
     }
-
+    /**
+     * Находит сущность Client по её id
+     *
+     * @param id, id сущности Client для поиска
+     * @return сущность Client с указанным id, или null, если не найдена
+     */
     public Client findById(Long id) {
         try (Connection connection = DatabaseUtil.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_CLIENT_BY_ID)) {
@@ -51,6 +64,11 @@ public class ClientRepository {
         return null;
     }
 
+    /**
+     * Находит все сущности Client в базе данных
+     *
+     * @return список всех сущностей Client
+     */
     public List<Client> findAll() {
         List<Client> clients = new ArrayList<>();
         try (Connection connection = DatabaseUtil.getConnection();
@@ -71,6 +89,11 @@ public class ClientRepository {
         return clients;
     }
 
+    /**
+     * Обновляет существующую сущность Client в базе данных
+     *
+     * @param client сущность Client для обновления
+     */
     public void update(Client client) {
         try (Connection connection = DatabaseUtil.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SQL_UPDATE_CLIENT)) {
@@ -85,6 +108,11 @@ public class ClientRepository {
         }
     }
 
+    /**
+     * Удаляет сущность Client из базы данных по id
+     *
+     * @param id, id сущности Client для удаления
+     */
     public void delete(Long id) {
         try (Connection connection = DatabaseUtil.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SQL_DELETE_CLIENT)) {

@@ -11,15 +11,24 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.Setter;
 
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Сервлет для управления клиентами, обрабатывающий HTTP-запросы для создания, получения, обновления и удаления клиентов
+ */
 @WebServlet("/clients/*")
 public class ClientServlet extends HttpServlet {
-    private ClientService clientService;
+    protected ClientService clientService;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    /**
+     * Инициализирует сервлет и создает экземпляр ClientService
+     *
+     * @throws ServletException если не удается инициализировать сервлет
+     */
     @Override
     public void init() throws ServletException {
         // Инициализация ClientService здесь
@@ -28,6 +37,16 @@ public class ClientServlet extends HttpServlet {
         clientService = new ClientService(clientRepository, clientMapper);
     }
 
+    /**
+     * Обрабатывает GET-запросы для получения информации о клиентах
+     * Если указан id клиента, возвращает информацию о конкретном клиенте
+     * Если id не указан, возвращает список всех клиентов
+     *
+     * @param request объект HttpServletRequest, содержащий информацию о запросе
+     * @param response объект HttpServletResponse, используемый для отправки ответа
+     * @throws ServletException если возникает ошибка при обработке запроса
+     * @throws IOException если возникает ошибка ввода-вывода
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String pathInfo = request.getPathInfo();
@@ -52,6 +71,16 @@ public class ClientServlet extends HttpServlet {
         }
     }
 
+    /**
+     * Обрабатывает GET-запросы для получения информации о клиентах
+     * Если указан id клиента, возвращает информацию о конкретном клиенте
+     * Если id не указан, возвращает список всех клиентов
+     *
+     * @param request объект HttpServletRequest, содержащий информацию о запросе
+     * @param response объект HttpServletResponse, используемый для отправки ответа
+     * @throws ServletException если возникает ошибка при обработке запроса
+     * @throws IOException если возникает ошибка ввода-вывода
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ClientDto clientDto = objectMapper.readValue(request.getInputStream(), ClientDto.class);
@@ -61,6 +90,14 @@ public class ClientServlet extends HttpServlet {
         response.getWriter().write(objectMapper.writeValueAsString(createdClient));
     }
 
+    /**
+     * Обрабатывает PUT-запросы для обновления существующего клиента.
+     *
+     * @param request объект HttpServletRequest, содержащий информацию о запросе
+     * @param response объект HttpServletResponse, используемый для отправки ответа
+     * @throws ServletException если возникает ошибка при обработке запроса
+     * @throws IOException если возникает ошибка ввода-вывода
+     */
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ClientDto clientDto = objectMapper.readValue(request.getInputStream(), ClientDto.class);
@@ -68,6 +105,14 @@ public class ClientServlet extends HttpServlet {
         response.setStatus(HttpServletResponse.SC_OK);
     }
 
+    /**
+     * Обрабатывает DELETE-запросы для удаления клиента по его id.
+     *
+     * @param request объект HttpServletRequest, содержащий информацию о запросе
+     * @param response объект HttpServletResponse, используемый для отправки ответа
+     * @throws ServletException если возникает ошибка при обработке запроса
+     * @throws IOException если возникает ошибка ввода-вывода
+     */
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String pathInfo = request.getPathInfo();
@@ -95,4 +140,5 @@ public class ClientServlet extends HttpServlet {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
     }
+
 }

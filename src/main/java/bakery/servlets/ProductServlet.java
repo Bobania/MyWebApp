@@ -14,18 +14,36 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Сервлет для управления продуктами, обрабатывающий HTTP-запросы для создания, получения, обновления и удаления продуктов
+ */
 @WebServlet("/products/*")
 public class ProductServlet extends HttpServlet {
-    private ProductService productService;
+    ProductService productService;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+
+    /**
+     * Инициализирует сервлет и создает экземпляр ProductService
+     *
+     * @throws ServletException если не удается инициализировать сервлет
+     */
     @Override
     public void init() throws ServletException {
         ProductRepository productRepository = new ProductRepository();
         ProductMapper productMapper = new ProductMapper();
         productService = new ProductService(productRepository, productMapper);
     }
-
+    /**
+     * Обрабатывает GET-запросы для получения информации о продуктах
+     * Если указан id продукта, возвращает информацию о конкретном продукте.
+     * Если id не указан, возвращает список всех продуктов
+     *
+     * @param request  объект HttpServletRequest, содержащий информацию о запросе
+     * @param response объект HttpServletResponse, используемый для отправки ответа
+     * @throws ServletException если возникает ошибка при обработке запроса
+     * @throws IOException если возникает ошибка ввода-вывода
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String pathInfo = request.getPathInfo();
@@ -50,6 +68,16 @@ public class ProductServlet extends HttpServlet {
         }
     }
 
+    /**
+     * Обрабатывает GET-запросы для получения информации о продуктах
+     * Если указан id продукта, возвращает информацию о конкретном продукте
+     * Если id не указан, возвращает список всех продуктов
+     *
+     * @param request объект HttpServletRequest, содержащий информацию о запросе
+     * @param response объект HttpServletResponse, используемый для отправки ответа
+     * @throws ServletException если возникает ошибка при обработке запроса
+     * @throws IOException если возникает ошибка ввода-вывода
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ProductDto productDto = objectMapper.readValue(request.getInputStream(), ProductDto.class);
@@ -59,6 +87,14 @@ public class ProductServlet extends HttpServlet {
         response.getWriter().write(objectMapper.writeValueAsString(createdProduct));
     }
 
+    /**
+     * Обрабатывает PUT-запросы для обновления существующего продукта
+     *
+     * @param request объект HttpServletRequest, содержащий информацию о запросе
+     * @param response объект HttpServletResponse, используемый для отправки ответа
+     * @throws ServletException если возникает ошибка при обработке запроса
+     * @throws IOException  если возникает ошибка ввода-вывода
+     */
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ProductDto productDto = objectMapper.readValue(request.getInputStream(), ProductDto.class);
@@ -66,6 +102,14 @@ public class ProductServlet extends HttpServlet {
         response.setStatus(HttpServletResponse.SC_OK);
     }
 
+    /**
+     * Обрабатывает DELETE-запросы для удаления продукта по его id.
+     *
+     * @param request объект HttpServletRequest, содержащий информацию о запросе
+     * @param response объект HttpServletResponse, используемый для отправки ответа
+     * @throws ServletException если возникает ошибка при обработке запроса
+     * @throws IOException если возникает ошибка ввода-вывода
+     */
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String pathInfo = request.getPathInfo();
